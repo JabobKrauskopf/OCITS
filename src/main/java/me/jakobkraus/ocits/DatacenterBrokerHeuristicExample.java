@@ -232,7 +232,7 @@ public class DatacenterBrokerHeuristicExample {
 
         printSolution(
                 "Round robin solution used by DatacenterBrokerSimple class",
-                roundRobinSolution, false);
+                roundRobinSolution, true);
         return roundRobinSolution.getCost();
     }
 
