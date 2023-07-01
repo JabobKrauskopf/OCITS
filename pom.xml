@@ -29,7 +29,7 @@
         <dependency>
             <groupId>org.cloudsimplus</groupId>
             <artifactId>cloudsimplus</artifactId>
-            <version>8.2.0</version>
+            <version>8.5.0</version>
         </dependency>
     </dependencies>
 </project>
