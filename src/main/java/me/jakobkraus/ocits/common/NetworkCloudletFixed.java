@@ -27,11 +27,8 @@ public class NetworkCloudletFixed extends NetworkCloudlet {
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
-        return super.isFinished();
-    }
-
-    @Override
-    public long getLength() {
-        return this.length;
+        var finished = super.isFinished();
+        System.out.println(finished);
+        return finished;
     }
 }
