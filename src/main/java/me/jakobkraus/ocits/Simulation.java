@@ -1,15 +1,14 @@
 package me.jakobkraus.ocits;
 
-import me.jakobkraus.ocits.common.Application;
+import me.jakobkraus.ocits.application.Application;
 import me.jakobkraus.ocits.common.DatacenterUtils;
 import org.cloudsimplus.builders.tables.CloudletsTableBuilder;
-import org.cloudsimplus.cloudlets.network.CloudletTask;
 import org.cloudsimplus.core.CloudSimPlus;
 import org.cloudsimplus.listeners.EventInfo;
-import org.cloudsimplus.listeners.EventListener;
 
 public class Simulation {
-    public static int SIMULATION_LENGTH = 100000;
+    public static int SIMULATION_LENGTH = 7200; // Simulate 2h
+    public static String[] COUNTRIES = new String[]{"Germany", "USA", "China", "Australia", "Ukraine"};
 
     private static final CloudSimPlus simulation = new CloudSimPlus();
 
@@ -18,7 +17,7 @@ public class Simulation {
     }
 
     public static void clockTickHandler(EventInfo info, Application application) {
-        System.out.println(application.getFrontendCloudlet().getLength());
+        // System.out.println(application.getFrontendCloudlet().getFinishedLengthSoFar());
     }
 
     public static void main(String[] args) {
@@ -29,6 +28,7 @@ public class Simulation {
             clockTickHandler(eventInfo, application);
         });
 
+        Simulation.simulation.terminateAt(Simulation.SIMULATION_LENGTH);
         Simulation.simulation.start();
 
         new CloudletsTableBuilder(application.getBroker().getCloudletFinishedList()).build();
