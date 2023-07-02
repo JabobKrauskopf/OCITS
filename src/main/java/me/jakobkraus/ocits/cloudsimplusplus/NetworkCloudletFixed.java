@@ -1,23 +1,22 @@
-package me.jakobkraus.ocits.common;
+package me.jakobkraus.ocits.cloudsimplusplus;
 
+import org.cloudsimplus.cloudlets.CloudletAbstract;
 import org.cloudsimplus.cloudlets.network.NetworkCloudlet;
 
 import java.util.ArrayList;
 
 public class NetworkCloudletFixed extends NetworkCloudlet {
-    private final long length;
     public NetworkCloudletFixed(long length, int pesNumber) {
         super(length, pesNumber);
-        this.length = length;
     }
 
     public NetworkCloudletFixed(int id, long length, int pesNumber) {
         super(id, length, pesNumber);
-        this.length = length;
     }
 
     @Override
     public boolean isFinished() {
+        // This reflection fixes an issue when creating a NetworkCloudlet. See: https://github.com/cloudsimplus/cloudsimplus/issues/455
         try {
             var tasksField = NetworkCloudlet.class.getDeclaredField("tasks");
             tasksField.setAccessible(true);
@@ -27,8 +26,17 @@ public class NetworkCloudletFixed extends NetworkCloudlet {
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
-        var finished = super.isFinished();
-        System.out.println(finished);
-        return finished;
+        return super.isFinished();
+    }
+
+    @Override
+    public long getLength() {
+        try {
+            var lenghtField = CloudletAbstract.class.getDeclaredField("length");
+            lenghtField.setAccessible(true);
+            return (long) lenghtField.get(this);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

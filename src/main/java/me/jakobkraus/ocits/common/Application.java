@@ -1,6 +1,7 @@
 package me.jakobkraus.ocits.common;
 
 import me.jakobkraus.ocits.Simulation;
+import me.jakobkraus.ocits.cloudsimplusplus.NetworkCloudletFixed;
 import org.cloudsimplus.brokers.DatacenterBroker;
 import org.cloudsimplus.brokers.DatacenterBrokerSimple;
 import org.cloudsimplus.cloudlets.network.CloudletExecutionTask;
@@ -28,14 +29,16 @@ public class Application {
         // Keep the Database running the whole time
         var ex0 = new CloudletExecutionTask(0, Simulation.SIMULATION_LENGTH);
         ex0.setMemory((long) (Application.VM_RAM * Application.DATABASE_RAM_PERCENTAGE));
-        var ex1 = new CloudletExecutionTask(0, 10);
+        var ex1 = new CloudletExecutionTask(0, 100000);
         ex1.setMemory((long) (Application.VM_RAM * (1 - Application.DATABASE_RAM_PERCENTAGE)));
-
+        var ex2 = new CloudletExecutionTask(0, 10);
+        ex2.setMemory((long) (Application.VM_RAM * (1 - Application.DATABASE_RAM_PERCENTAGE)));
 
         this.databaseCloudlet = createDatabase();
         this.frontendCloudlet = createFrontend();
         databaseCloudlet.addTask(ex0);
-        // frontendCloudlet.addTask(ex1);
+        frontendCloudlet.addTask(ex1);
+//        frontendCloudlet.addTask(ex2);
 
         this.vm = new NetworkVm(100, 1);
         this.vm.setRam(Application.VM_RAM).setBw(Application.VM_BANDWIDTH).setSize(Application.VM_SIZE);

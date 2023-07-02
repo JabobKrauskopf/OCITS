@@ -17,15 +17,17 @@ public class Simulation {
         return simulation;
     }
 
-    public static void clockTickHandler(EventInfo info) {
-        // System.out.println(info.getTime());
+    public static void clockTickHandler(EventInfo info, Application application) {
+        System.out.println(application.getFrontendCloudlet().getLength());
     }
 
     public static void main(String[] args) {
         var datacenter = DatacenterUtils.createDatacenter();
         var application = new Application();
 
-        Simulation.simulation.addOnClockTickListener(Simulation::clockTickHandler);
+        Simulation.simulation.addOnClockTickListener(eventInfo -> {
+            clockTickHandler(eventInfo, application);
+        });
 
         Simulation.simulation.start();
 
