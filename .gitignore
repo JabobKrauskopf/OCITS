@@ -6,3 +6,7 @@
 # Maven
 log/
 target/
+
+# Simulation Output
+userLogs.csv
+functionLogs.csv

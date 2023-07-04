@@ -4,6 +4,8 @@ import me.jakobkraus.ocits.Simulation;
 import me.jakobkraus.ocits.application.Application;
 import me.jakobkraus.ocits.application.User;
 import me.jakobkraus.ocits.global.Country;
+import me.jakobkraus.ocits.logging.FunctionPayload;
+import me.jakobkraus.ocits.logging.ResultLogger;
 import org.cloudsimplus.listeners.EventInfo;
 import org.cloudsimplus.utilizationmodels.UtilizationModel;
 
@@ -19,6 +21,7 @@ public class FunctionCloudlet extends ApplicationCloudlet {
     public FunctionCloudlet(long length, int pesNumber, Country country, Application application, double startTime, UtilizationModel utilizationModel) {
         super(length, pesNumber, country, application, utilizationModel);
         this.startTime = startTime;
+        ResultLogger.log(new FunctionPayload(this, FunctionStatus.Starting, startTime));
     }
 
     public FunctionCloudlet(long length, int pesNumber, Country country, Application application, double startTime) {
@@ -97,6 +100,7 @@ public class FunctionCloudlet extends ApplicationCloudlet {
 
     public void setFunctionStatus(FunctionStatus functionStatus, EventInfo info) {
         this.functionStatus = functionStatus;
+        ResultLogger.log(new FunctionPayload(this, functionStatus, info.getTime()));
     }
 
     public void setRequestedSince(double time) {

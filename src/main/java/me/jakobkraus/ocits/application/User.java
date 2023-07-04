@@ -6,6 +6,7 @@ import me.jakobkraus.ocits.logging.UserPayload;
 import org.cloudsimplus.listeners.EventInfo;
 
 public class User {
+    private final long id;
     private final Country country;
     private final long startTime;
     private final double period; // in s
@@ -16,13 +17,15 @@ public class User {
     private double lastRequest;
     private int currentRequestCount;
 
-    public User(Country country, int startTime, double period, int maxRequestCount, Application application) {
+    public User(long id, Country country, int startTime, double period, int maxRequestCount, Application application) {
+        this.id = id;
         this.country = country;
         this.startTime = startTime;
         this.period = period;
         this.maxRequestCount = maxRequestCount;
         this.application = application;
         this.lastRequest = startTime - period;
+        ResultLogger.log(new UserPayload(this, UserStatus.Prestart, 0));
     }
 
     public void process(EventInfo info) {
@@ -47,9 +50,13 @@ public class User {
         this.setStatus(UserStatus.Idling, info);
     }
 
+    public double getId() {
+        return this.id;
+    }
+
     public void setStatus(UserStatus status, EventInfo info) {
         this.status = status;
-        ResultLogger.log(new UserPayload(this, status, info));
+        ResultLogger.log(new UserPayload(this, status, info.getTime()));
     }
 
     public Country getCountry() {

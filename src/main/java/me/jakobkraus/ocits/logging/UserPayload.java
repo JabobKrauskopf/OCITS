@@ -2,20 +2,24 @@ package me.jakobkraus.ocits.logging;
 
 import me.jakobkraus.ocits.application.User;
 import me.jakobkraus.ocits.application.UserStatus;
-import org.cloudsimplus.listeners.EventInfo;
 
 public class UserPayload {
     private final User user;
     private final UserStatus status;
-    private final EventInfo info;
-    public UserPayload(User user, UserStatus status, EventInfo info) {
+    private final double time;
+
+    public UserPayload(User user, UserStatus status, double time) {
         this.user = user;
         this.status = status;
-        this.info = info;
+        this.time = time;
+    }
+
+    public static String getCsvHeader() {
+        return String.join(",", "userId", "Status", "time");
     }
 
     @Override
     public String toString() {
-        return "";
+        return String.join(",", String.valueOf(user.getId()), status.toString(), String.valueOf(time));
     }
 }

@@ -4,7 +4,6 @@ import me.jakobkraus.ocits.application.Application;
 import me.jakobkraus.ocits.application.User;
 import me.jakobkraus.ocits.application.UserHandler;
 import me.jakobkraus.ocits.cloudlets.ApplicationCloudlet;
-import me.jakobkraus.ocits.cloudlets.FunctionCloudlet;
 import me.jakobkraus.ocits.cloudlets.GlobalCloudlet;
 import me.jakobkraus.ocits.datacenter.DatacenterUtils;
 import me.jakobkraus.ocits.datacenter.GlobalDatacenter;
@@ -12,6 +11,7 @@ import me.jakobkraus.ocits.datacenter.GlobalDatacenterBroker;
 import me.jakobkraus.ocits.datacenter.GlobalVm;
 import me.jakobkraus.ocits.global.Country;
 import me.jakobkraus.ocits.global.CountryCostMapping;
+import me.jakobkraus.ocits.logging.ResultLogger;
 import org.cloudsimplus.brokers.DatacenterBroker;
 import org.cloudsimplus.builders.tables.CloudletsTableBuilder;
 import org.cloudsimplus.builders.tables.TextTableColumn;
@@ -19,6 +19,7 @@ import org.cloudsimplus.cloudlets.Cloudlet;
 import org.cloudsimplus.core.CloudSimPlus;
 import org.cloudsimplus.listeners.EventInfo;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 public class Simulation {
@@ -50,7 +51,7 @@ public class Simulation {
     private static final List<User> users = applications.stream()
             .flatMap(application -> UserHandler.createUsers(application).stream()).toList();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         DatacenterUtils.createDatacenter(Country.Germany);
         DatacenterUtils.createDatacenter(Country.USA);
         DatacenterUtils.createDatacenter(Country.China);
@@ -66,6 +67,9 @@ public class Simulation {
                 .addColumn(new TextTableColumn("Cloudlet Expected", "     Country     "), Simulation::getCloudletCountry)
                 .addColumn(new TextTableColumn("Application", "  Country  "), Simulation::getCloudletApplication)
                 .build();
+
+        ResultLogger.saveUserLogsToCsv("./userLogs.csv");
+        ResultLogger.saveFunctionLogsToCsv("./functionLogs.csv");
     }
 
     public static void clockTickHandler(EventInfo info) {
