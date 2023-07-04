@@ -1,6 +1,8 @@
 package me.jakobkraus.ocits.application;
 
 import me.jakobkraus.ocits.global.Country;
+import me.jakobkraus.ocits.logging.ResultLogger;
+import me.jakobkraus.ocits.logging.UserPayload;
 import org.cloudsimplus.listeners.EventInfo;
 
 public class User {
@@ -35,18 +37,19 @@ public class User {
             return;
 
         this.application.request(info, this);
-        this.setStatus(UserStatus.Waiting);
+        this.setStatus(UserStatus.Waiting, info);
     }
 
     public void processPrestart(EventInfo info) {
         if (info.getTime() < this.startTime)
             return;
 
-        this.setStatus(UserStatus.Idling);
+        this.setStatus(UserStatus.Idling, info);
     }
 
-    public void setStatus(UserStatus status) {
+    public void setStatus(UserStatus status, EventInfo info) {
         this.status = status;
+        ResultLogger.log(new UserPayload(this, status, info));
     }
 
     public Country getCountry() {
@@ -58,10 +61,10 @@ public class User {
         this.currentRequestCount++;
 
         if (this.currentRequestCount >= this.maxRequestCount) {
-            this.setStatus(UserStatus.Finished);
+            this.setStatus(UserStatus.Finished, info);
             return;
         }
 
-        this.setStatus(UserStatus.Idling);
+        this.setStatus(UserStatus.Idling, info);
     }
 }

@@ -49,7 +49,7 @@ public class Application {
         if (!availableCloudlets.isEmpty()) {
             var cloudlet = availableCloudlets.get(0);
             cloudlet.setRespondTo(user);
-            cloudlet.setFunctionStatus(FunctionStatus.Requested);
+            cloudlet.setFunctionStatus(FunctionStatus.Requested, info);
             cloudlet.setRequestedSince(info.getTime());
             return;
         }

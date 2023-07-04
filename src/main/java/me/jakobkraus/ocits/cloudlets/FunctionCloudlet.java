@@ -54,7 +54,7 @@ public class FunctionCloudlet extends ApplicationCloudlet {
         if (info.getTime() - this.startTime < Simulation.FUNCTION_STARTUP_TIME)
             return;
 
-        this.setFunctionStatus(FunctionStatus.Requested);
+        this.setFunctionStatus(FunctionStatus.Requested, info);
         this.setRequestedSince(info.getTime());
     }
 
@@ -62,7 +62,7 @@ public class FunctionCloudlet extends ApplicationCloudlet {
         if (info.getTime() - this.executingSince < Simulation.FUNCTION_EXECUTION_TIME)
             return;
 
-        this.setFunctionStatus(FunctionStatus.Responding);
+        this.setFunctionStatus(FunctionStatus.Responding, info);
         this.respondingSince = info.getTime();
     }
 
@@ -71,7 +71,7 @@ public class FunctionCloudlet extends ApplicationCloudlet {
         if (info.getTime() - this.requestedSince < requestCost)
             return;
 
-        this.setFunctionStatus(FunctionStatus.Executing);
+        this.setFunctionStatus(FunctionStatus.Executing, info);
         this.executingSince = info.getTime();
     }
 
@@ -80,7 +80,7 @@ public class FunctionCloudlet extends ApplicationCloudlet {
         if (info.getTime() - this.respondingSince < responseCost)
             return;
 
-        this.setFunctionStatus(FunctionStatus.Idling);
+        this.setFunctionStatus(FunctionStatus.Idling, info);
         this.idlingSince = info.getTime();
         this.respondTo.respond(info);
     }
@@ -91,11 +91,11 @@ public class FunctionCloudlet extends ApplicationCloudlet {
 
         this.setLength(this.getFinishedLengthSoFar());
         this.setFinishTime(info.getTime());
-        this.setFunctionStatus(FunctionStatus.Finished);
+        this.setFunctionStatus(FunctionStatus.Finished, info);
         this.application.removeFrontendCloudlet(this);
     }
 
-    public void setFunctionStatus(FunctionStatus functionStatus) {
+    public void setFunctionStatus(FunctionStatus functionStatus, EventInfo info) {
         this.functionStatus = functionStatus;
     }
 

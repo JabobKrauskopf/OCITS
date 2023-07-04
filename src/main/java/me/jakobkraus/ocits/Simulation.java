@@ -36,7 +36,7 @@ public class Simulation {
 
     public static final double FUNCTION_STARTUP_TIME = 0.3;
     public static final double FUNCTION_IDLE_TIME = 7;
-    public static final double FUNCTION_EXECUTION_TIME = 2;
+    public static final double FUNCTION_EXECUTION_TIME = 0.1;
 
     private static final CloudSimPlus simulation = new CloudSimPlus();
     private static final GlobalDatacenterBroker broker = new GlobalDatacenterBroker(simulation);
@@ -46,13 +46,6 @@ public class Simulation {
             new Application(List.of(
                     Country.Germany
             ), "Application1")
-//            new Application(List.of(
-//                    Country.USA,
-//                    Country.SouthAfrica,
-//                    Country.Australia
-//            ), List.of(
-//                    Country.Germany
-//            ), "Application2")
     );
     private static final List<User> users = applications.stream()
             .flatMap(application -> UserHandler.createUsers(application).stream()).toList();
@@ -71,7 +64,6 @@ public class Simulation {
                 .addColumn(new TextTableColumn("   DC   ", " Country "), Simulation::getDatacenterCountry)
                 .addColumn(new TextTableColumn("VM Expected", "  Country  "), Simulation::getVmCountry)
                 .addColumn(new TextTableColumn("Cloudlet Expected", "     Country     "), Simulation::getCloudletCountry)
-                .addColumn(new TextTableColumn("Cloudlet Type", "   Country   "), Simulation::getCloudletType)
                 .addColumn(new TextTableColumn("Application", "  Country  "), Simulation::getCloudletApplication)
                 .build();
     }
@@ -102,13 +94,6 @@ public class Simulation {
         if (!(cloudlet instanceof GlobalCloudlet))
             return "N/A";
         return ((GlobalCloudlet) cloudlet).getCountry().toString();
-    }
-
-    public static String getCloudletType(final Cloudlet cloudlet) {
-        if (cloudlet instanceof FunctionCloudlet)
-            return "Frontend";
-        else
-            return "N/A";
     }
 
     public static String getCloudletApplication(final Cloudlet cloudlet) {
