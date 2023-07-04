@@ -1,6 +1,8 @@
 package me.jakobkraus.ocits;
 
 import me.jakobkraus.ocits.application.Application;
+import me.jakobkraus.ocits.application.User;
+import me.jakobkraus.ocits.application.UserHandler;
 import me.jakobkraus.ocits.cloudlets.ApplicationCloudlet;
 import me.jakobkraus.ocits.cloudlets.DatabaseCloudlet;
 import me.jakobkraus.ocits.cloudlets.FrontendCloudlet;
@@ -19,27 +21,24 @@ import org.cloudsimplus.core.CloudSimPlus;
 import org.cloudsimplus.listeners.EventInfo;
 
 import java.util.List;
-import java.util.Map;
 
 public class Simulation {
-    public static int SIMULATION_LENGTH = 7200; // Simulate 2h
-    public static int HOSTS_PER_DATACENTER = 5;
-    public static int HOST_MIPS = 10000;
-    public static int HOST_RAM = 131072; // 128GB
-    public static int HOST_BW = 100000; // 100 Gb
-    public static int HOST_CORES = 128; // 128 Threads
-    public static long HOST_STORAGE = 10000000L; // 10 TB
+    public static final int SIMULATION_LENGTH = 7200; // Simulate 2h
+    public static final int HOSTS_PER_DATACENTER = 5;
+    public static final int HOST_MIPS = 10000;
+    public static final int HOST_RAM = 131072; // 128GB
+    public static final int HOST_BW = 100000; // 100 Gb
+    public static final int HOST_CORES = 128; // 128 Threads
+    public static final long HOST_STORAGE = 10000000L; // 10 TB
 
-    public static int VM_RAM = 8192; // 8GB
-    public static int VM_BANDWIDTH = 1000; // 1 Gb
-    public static int VM_SIZE = 4000; // 4 GB
+    public static final int VM_RAM = 8192; // 8GB
+    public static final int VM_BANDWIDTH = 1000; // 1 Gb
+    public static final int VM_SIZE = 4000; // 4 GB
 
-    public static Map<Country, Integer> USERS_PER_COUNTRY = Map.of(
-            Country.Germany, 10,
-            Country.USA, 10,
-            Country.Australia, 5
-    );
-
+    public static final double FUNCTION_STARTUP_TIME = 0.3;
+    public static final double FUNCTION_IDLE_TIME = 7;
+    public static final double FUNCTION_EXECUTION_TIME = 0.1;
+    public static final boolean FUNCTION_REQUIRE_DATABASE = true;
 
     private static final CloudSimPlus simulation = new CloudSimPlus();
     private static final GlobalDatacenterBroker broker = new GlobalDatacenterBroker(simulation);
@@ -53,7 +52,16 @@ public class Simulation {
             ), List.of(
                     Country.Germany
             ), "Application1")
+//            new Application(List.of(
+//                    Country.USA,
+//                    Country.SouthAfrica,
+//                    Country.Australia
+//            ), List.of(
+//                    Country.Germany
+//            ), "Application2")
     );
+    private static final List<User> users = applications.stream()
+            .flatMap(application -> UserHandler.createUsers(application).stream()).toList();
 
     public static void main(String[] args) {
         DatacenterUtils.createDatacenter(Country.Germany);
@@ -75,7 +83,11 @@ public class Simulation {
     }
 
     public static void clockTickHandler(EventInfo info) {
-        applications.forEach(Application::process);
+        for (var application : applications)
+            application.process(info);
+
+        for (var user : users)
+            user.process(info);
     }
 
     public static String getDatacenterCountry(final Cloudlet cloudlet) {
@@ -110,7 +122,7 @@ public class Simulation {
     public static String getCloudletApplication(final Cloudlet cloudlet) {
         if (!(cloudlet instanceof ApplicationCloudlet))
             return "N/A";
-        return ((ApplicationCloudlet) cloudlet).getApplicationName();
+        return ((ApplicationCloudlet) cloudlet).getApplication().getApplicationName();
     }
 
     public static CloudSimPlus getSimulation() {
