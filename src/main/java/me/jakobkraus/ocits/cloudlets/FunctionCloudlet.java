@@ -7,30 +7,31 @@ import me.jakobkraus.ocits.global.Country;
 import org.cloudsimplus.listeners.EventInfo;
 import org.cloudsimplus.utilizationmodels.UtilizationModel;
 
-public class FrontendCloudlet extends ApplicationCloudlet {
+public class FunctionCloudlet extends ApplicationCloudlet {
     private final double startTime;
     private FunctionStatus functionStatus = FunctionStatus.Starting;
-    private double startExecuting;
-    private double waitingSince;
+    private double executingSince;
+    private double requestedSince;
+    private double respondingSince;
     private double idlingSince;
     private User respondTo;
 
-    public FrontendCloudlet(long length, int pesNumber, Country country, Application application, double startTime, UtilizationModel utilizationModel) {
+    public FunctionCloudlet(long length, int pesNumber, Country country, Application application, double startTime, UtilizationModel utilizationModel) {
         super(length, pesNumber, country, application, utilizationModel);
         this.startTime = startTime;
     }
 
-    public FrontendCloudlet(long length, int pesNumber, Country country, Application application, double startTime) {
+    public FunctionCloudlet(long length, int pesNumber, Country country, Application application, double startTime) {
         super(length, pesNumber, country, application);
         this.startTime = startTime;
     }
 
-    public FrontendCloudlet(long length, long pesNumber, Country country, Application application, double startTime) {
+    public FunctionCloudlet(long length, long pesNumber, Country country, Application application, double startTime) {
         super(length, pesNumber, country, application);
         this.startTime = startTime;
     }
 
-    public FrontendCloudlet(long id, long length, long pesNumber, Country country, Application application, double startTime) {
+    public FunctionCloudlet(long id, long length, long pesNumber, Country country, Application application, double startTime) {
         super(id, length, pesNumber, country, application);
         this.startTime = startTime;
     }
@@ -42,8 +43,9 @@ public class FrontendCloudlet extends ApplicationCloudlet {
     public void process(EventInfo info) {
         switch (this.functionStatus) {
             case Starting -> processStarting(info);
-            case Waiting -> processWaiting(info);
             case Executing -> processExecuting(info);
+            case Requested -> processRequested(info);
+            case Responding -> processResponding(info);
             case Idling -> processIdling(info);
         }
     }
@@ -52,21 +54,37 @@ public class FrontendCloudlet extends ApplicationCloudlet {
         if (info.getTime() - this.startTime < Simulation.FUNCTION_STARTUP_TIME)
             return;
 
-        this.setFunctionStatus(FunctionStatus.Executing);
-        this.setStartExecuting(info.getTime());
+        this.setFunctionStatus(FunctionStatus.Requested);
+        this.setRequestedSince(info.getTime());
     }
+
     public void processExecuting(EventInfo info) {
-        if (info.getTime() - this.startExecuting < Simulation.FUNCTION_EXECUTION_TIME) {
+        if (info.getTime() - this.executingSince < Simulation.FUNCTION_EXECUTION_TIME)
             return;
-        }
+
+        this.setFunctionStatus(FunctionStatus.Responding);
+        this.respondingSince = info.getTime();
+    }
+
+    public void processRequested(EventInfo info) {
+        var requestCost = Simulation.getCountryCostMapping().getCost(this.respondTo.getCountry(), this.country);
+        if (info.getTime() - this.requestedSince < requestCost)
+            return;
+
+        this.setFunctionStatus(FunctionStatus.Executing);
+        this.executingSince = info.getTime();
+    }
+
+    public void processResponding(EventInfo info) {
+        var responseCost = Simulation.getCountryCostMapping().getCost(this.respondTo.getCountry(), this.country);
+        if (info.getTime() - this.respondingSince < responseCost)
+            return;
 
         this.setFunctionStatus(FunctionStatus.Idling);
         this.idlingSince = info.getTime();
         this.respondTo.respond(info);
     }
-    public void processWaiting(EventInfo info) {
 
-    }
     public void processIdling(EventInfo info) {
         if (info.getTime() - this.idlingSince < Simulation.FUNCTION_IDLE_TIME)
             return;
@@ -81,8 +99,8 @@ public class FrontendCloudlet extends ApplicationCloudlet {
         this.functionStatus = functionStatus;
     }
 
-    public void setStartExecuting(double time) {
-        this.startExecuting = time;
+    public void setRequestedSince(double time) {
+        this.requestedSince = time;
     }
 
     public FunctionStatus getFunctionStatus() {

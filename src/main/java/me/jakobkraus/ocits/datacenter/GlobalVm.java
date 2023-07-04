@@ -5,7 +5,8 @@ import org.cloudsimplus.schedulers.cloudlet.CloudletScheduler;
 import org.cloudsimplus.vms.VmSimple;
 
 public class GlobalVm extends VmSimple {
-    private Country country;
+    private final Country country;
+
     public GlobalVm(double mipsCapacity, long pesNumber, Country country) {
         super(mipsCapacity, pesNumber);
         this.country = country;

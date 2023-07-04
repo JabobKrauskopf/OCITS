@@ -1,14 +1,12 @@
 package me.jakobkraus.ocits.global;
 
-import org.apache.commons.collections4.keyvalue.MultiKey;
 import org.apache.commons.collections4.map.MultiKeyMap;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class CountryCostMapping {
     private final MultiKeyMap<Country, Double> mapping;
+
     public CountryCostMapping() {
         this.mapping = new MultiKeyMap<>();
 

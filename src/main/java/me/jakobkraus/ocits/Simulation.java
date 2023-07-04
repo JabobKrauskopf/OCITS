@@ -4,8 +4,7 @@ import me.jakobkraus.ocits.application.Application;
 import me.jakobkraus.ocits.application.User;
 import me.jakobkraus.ocits.application.UserHandler;
 import me.jakobkraus.ocits.cloudlets.ApplicationCloudlet;
-import me.jakobkraus.ocits.cloudlets.DatabaseCloudlet;
-import me.jakobkraus.ocits.cloudlets.FrontendCloudlet;
+import me.jakobkraus.ocits.cloudlets.FunctionCloudlet;
 import me.jakobkraus.ocits.cloudlets.GlobalCloudlet;
 import me.jakobkraus.ocits.datacenter.DatacenterUtils;
 import me.jakobkraus.ocits.datacenter.GlobalDatacenter;
@@ -38,7 +37,6 @@ public class Simulation {
     public static final double FUNCTION_STARTUP_TIME = 0.3;
     public static final double FUNCTION_IDLE_TIME = 7;
     public static final double FUNCTION_EXECUTION_TIME = 2;
-    public static final boolean FUNCTION_REQUIRE_DATABASE = true;
 
     private static final CloudSimPlus simulation = new CloudSimPlus();
     private static final GlobalDatacenterBroker broker = new GlobalDatacenterBroker(simulation);
@@ -46,10 +44,6 @@ public class Simulation {
 
     private static final List<Application> applications = List.of(
             new Application(List.of(
-                    Country.Germany,
-                    Country.Canada,
-                    Country.Australia
-            ), List.of(
                     Country.Germany
             ), "Application1")
 //            new Application(List.of(
@@ -111,9 +105,7 @@ public class Simulation {
     }
 
     public static String getCloudletType(final Cloudlet cloudlet) {
-        if (cloudlet instanceof DatabaseCloudlet)
-            return "Database";
-        else if (cloudlet instanceof FrontendCloudlet)
+        if (cloudlet instanceof FunctionCloudlet)
             return "Frontend";
         else
             return "N/A";

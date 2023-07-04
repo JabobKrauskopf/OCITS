@@ -6,6 +6,7 @@ import org.cloudsimplus.utilizationmodels.UtilizationModel;
 
 public class GlobalCloudlet extends CloudletSimple {
     protected Country country;
+
     public GlobalCloudlet(long length, int pesNumber, Country country, UtilizationModel utilizationModel) {
         super(length, pesNumber, utilizationModel);
         this.country = country;

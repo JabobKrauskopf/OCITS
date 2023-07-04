@@ -19,13 +19,13 @@ public class GlobalDatacenterBroker extends DatacenterBrokerSimple {
 
     @Override
     protected Datacenter defaultDatacenterMapper(Datacenter lastDatacenter, Vm vm) {
-        if(getDatacenterList().isEmpty()) {
+        if (getDatacenterList().isEmpty()) {
             throw new IllegalStateException("No datacenters were created.");
         }
 
         var dataCenterList = getDatacenterList();
 
-        if (dataCenterList.stream().anyMatch(datacenter -> !(datacenter instanceof GlobalDatacenter)) || !(vm instanceof GlobalVm globalVm)){
+        if (dataCenterList.stream().anyMatch(datacenter -> !(datacenter instanceof GlobalDatacenter)) || !(vm instanceof GlobalVm globalVm)) {
             return super.defaultDatacenterMapper(lastDatacenter, vm);
         }
 

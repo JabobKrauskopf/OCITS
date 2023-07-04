@@ -1,26 +1,26 @@
 package me.jakobkraus.ocits.application;
 
-import me.jakobkraus.ocits.Simulation;
 import me.jakobkraus.ocits.global.Country;
 import org.cloudsimplus.listeners.EventInfo;
 
 public class User {
     private final Country country;
     private final long startTime;
-    private final double frequency; // in s between requests
-    private final int requestCount;
+    private final double period; // in s
+    private final int maxRequestCount;
     private final Application application;
 
     private UserStatus status = UserStatus.Prestart;
     private double lastRequest;
+    private int currentRequestCount;
 
-    public User(Country country, int startTime, double frequency, int requestCount, Application application) {
+    public User(Country country, int startTime, double period, int maxRequestCount, Application application) {
         this.country = country;
         this.startTime = startTime;
-        this.frequency = frequency;
-        this.requestCount = requestCount;
+        this.period = period;
+        this.maxRequestCount = maxRequestCount;
         this.application = application;
-        this.lastRequest = startTime - frequency;
+        this.lastRequest = startTime - period;
     }
 
     public void process(EventInfo info) {
@@ -31,12 +31,13 @@ public class User {
     }
 
     public void processIdling(EventInfo info) {
-        if (info.getTime() - this.lastRequest < frequency)
+        if (info.getTime() - this.lastRequest < this.period)
             return;
 
         this.application.request(info, this);
         this.setStatus(UserStatus.Waiting);
     }
+
     public void processPrestart(EventInfo info) {
         if (info.getTime() < this.startTime)
             return;
@@ -47,12 +48,20 @@ public class User {
     public void setStatus(UserStatus status) {
         this.status = status;
     }
+
     public Country getCountry() {
         return this.country;
     }
 
     public void respond(EventInfo info) {
         this.lastRequest = info.getTime();
+        this.currentRequestCount++;
+
+        if (this.currentRequestCount >= this.maxRequestCount) {
+            this.setStatus(UserStatus.Finished);
+            return;
+        }
+
         this.setStatus(UserStatus.Idling);
     }
 }

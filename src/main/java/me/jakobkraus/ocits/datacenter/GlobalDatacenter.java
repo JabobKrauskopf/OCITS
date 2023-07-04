@@ -11,7 +11,8 @@ import org.cloudsimplus.resources.SanStorage;
 import java.util.List;
 
 public class GlobalDatacenter extends DatacenterSimple {
-    private Country country;
+    private final Country country;
+
     public GlobalDatacenter(Simulation simulation, Country country, List<? extends Host> hostList) {
         super(simulation, hostList);
         this.country = country;

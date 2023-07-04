@@ -4,8 +4,9 @@ import me.jakobkraus.ocits.application.Application;
 import me.jakobkraus.ocits.global.Country;
 import org.cloudsimplus.utilizationmodels.UtilizationModel;
 
-public class ApplicationCloudlet extends GlobalCloudlet{
+public class ApplicationCloudlet extends GlobalCloudlet {
     protected Application application;
+
     public ApplicationCloudlet(long length, int pesNumber, Country country, Application application, UtilizationModel utilizationModel) {
         super(length, pesNumber, country, utilizationModel);
         this.application = application;
