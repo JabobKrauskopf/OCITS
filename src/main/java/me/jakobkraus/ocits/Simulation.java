@@ -37,7 +37,7 @@ public class Simulation {
 
     public static final double FUNCTION_STARTUP_TIME = 0.3;
     public static final double FUNCTION_IDLE_TIME = 7;
-    public static final double FUNCTION_EXECUTION_TIME = 0.1;
+    public static final double FUNCTION_EXECUTION_TIME = 2;
     public static final boolean FUNCTION_REQUIRE_DATABASE = true;
 
     private static final CloudSimPlus simulation = new CloudSimPlus();

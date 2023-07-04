@@ -59,11 +59,8 @@ public class Application {
             cloudlet.setRespondTo(user);
             cloudlet.setFunctionStatus(FunctionStatus.Executing);
             cloudlet.setStartExecuting(info.getTime());
-            System.out.println("In here");
             return;
         }
-
-        System.out.println("Out here");
 
         var newCloudlet = createFrontend(closestAvailableCountry, info.getTime());
         newCloudlet.setRespondTo(user);
@@ -95,7 +92,7 @@ public class Application {
     }
 
     public FrontendCloudlet createFrontend(Country country, double startupTime) {
-        final long length = Simulation.SIMULATION_LENGTH;
+        final long length = -1;
         final long fileSize = 50000000; // 50 MB
 
         final var utilizationFull = new UtilizationModelFull();
