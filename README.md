@@ -68,3 +68,14 @@ Description of static parameters:
 
 - `COUNTRIES_WITH_DATACENTER`: the countries with a datacenter
 - `COUNTRIES_WITH_FUNCTION`: the countries where the application would like to deploy functions to. Does not have to overlap with `COUNTRIES_WITH_DATACENTER`
+
+## Notes
+
+CloudSim Plus has features for networking. These features however are currently not suitable for use in
+a production simulation. Some examples for issues for this can be found in the following GitHub issues:
+- https://github.com/cloudsimplus/cloudsimplus/issues/455
+- https://github.com/cloudsimplus/cloudsimplus/issues/456
+- https://github.com/cloudsimplus/cloudsimplus/issues/457
+
+That is why this simulation implements its own simple networking logic and bypasses the CloudSim Event Bus,
+hooking into the `onClockTick` handler and managing cloudlet and user states using a finite state machine.
