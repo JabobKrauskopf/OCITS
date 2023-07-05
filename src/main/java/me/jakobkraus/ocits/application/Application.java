@@ -6,24 +6,22 @@ import me.jakobkraus.ocits.cloudlets.FunctionStatus;
 import me.jakobkraus.ocits.datacenter.GlobalVm;
 import me.jakobkraus.ocits.global.Country;
 import org.cloudsimplus.listeners.EventInfo;
-import org.cloudsimplus.utilizationmodels.UtilizationModelDynamic;
-import org.cloudsimplus.utilizationmodels.UtilizationModelFull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Application {
-    private final List<Country> countriesWithFrontend;
+    private final List<Country> countriesWithFunction;
     private final List<FunctionCloudlet> functionCloudlets = new ArrayList<>();
     private final String applicationName;
 
-    public Application(List<Country> countriesWithFrontend, String applicationName) {
-        this.countriesWithFrontend = countriesWithFrontend;
+    public Application(List<Country> countriesWithFunction, String applicationName) {
+        this.countriesWithFunction = countriesWithFunction;
         this.applicationName = applicationName;
 
         var broker = Simulation.getBroker();
 
-        var vms = this.countriesWithFrontend.stream()
+        var vms = this.countriesWithFunction.stream()
                 .map(country -> new GlobalVm(10000, 2, country)
                         .setRam(Simulation.VM_RAM)
                         .setBw(Simulation.VM_BANDWIDTH)
@@ -40,7 +38,7 @@ public class Application {
 
     public void request(EventInfo info, User user) {
         var closestAvailableCountry = Simulation.getCountryCostMapping()
-                .getClosestCountry(user.getCountry(), this.countriesWithFrontend);
+                .getClosestCountry(user.getCountry(), this.countriesWithFunction);
 
         var availableCloudlets = this.functionCloudlets.stream()
                 .filter(cloudlet -> cloudlet.getCountry() == closestAvailableCountry)
@@ -54,33 +52,27 @@ public class Application {
             return;
         }
 
-        var newCloudlet = createFrontend(closestAvailableCountry, info.getTime());
+        var newCloudlet = createFunction(closestAvailableCountry, info.getTime());
         newCloudlet.setRespondTo(user);
-        this.addFrontendCloudlet(newCloudlet);
+        this.addFunctionCloudlet(newCloudlet);
     }
 
-    public void addFrontendCloudlet(FunctionCloudlet cloudlet) {
+    public void addFunctionCloudlet(FunctionCloudlet cloudlet) {
         this.functionCloudlets.add(cloudlet);
         Simulation.getBroker().submitCloudlet(cloudlet);
     }
 
-    public void removeFrontendCloudlet(FunctionCloudlet cloudlet) {
+    public void removeFunctionCloudlet(FunctionCloudlet cloudlet) {
         this.functionCloudlets.remove(cloudlet);
     }
 
-    public FunctionCloudlet createFrontend(Country country, double startupTime) {
+    public FunctionCloudlet createFunction(Country country, double startupTime) {
         final long length = -1;
         final long fileSize = 50000000; // 50 MB
 
-        final var utilizationFull = new UtilizationModelFull();
-        final var utilizationDynamic = new UtilizationModelDynamic(0.1);
-
         return (FunctionCloudlet) new FunctionCloudlet(length, 1, country, this, startupTime)
                 .setFileSize(fileSize)
-                .setOutputSize(fileSize)
-                .setUtilizationModelCpu(utilizationFull)
-                .setUtilizationModelRam(utilizationDynamic)
-                .setUtilizationModelBw(utilizationDynamic);
+                .setOutputSize(fileSize);
     }
 
     public String getApplicationName() {

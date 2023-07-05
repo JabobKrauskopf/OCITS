@@ -15,7 +15,7 @@ public class UserPayload {
     }
 
     public static String getCsvHeader() {
-        return String.join(",", "userId", "Status", "time");
+        return String.join(",", "userId", "status", "time");
     }
 
     @Override

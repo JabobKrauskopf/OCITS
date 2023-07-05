@@ -23,7 +23,7 @@ import java.io.FileNotFoundException;
 import java.util.List;
 
 public class Simulation {
-    public static final int SIMULATION_LENGTH = 7200; // Simulate 2h
+    public static final int SIMULATION_LENGTH = 43200; // Simulate 24h
     public static final int HOSTS_PER_DATACENTER = 5;
     public static final int HOST_MIPS = 10000;
     public static final int HOST_RAM = 131072; // 128GB
@@ -31,25 +31,25 @@ public class Simulation {
     public static final int HOST_CORES = 128; // 128 Threads
     public static final long HOST_STORAGE = 10000000L; // 10 TB
 
-    public static final int VM_RAM = 8192; // 8GB
-    public static final int VM_BANDWIDTH = 1000; // 1 Gb
+    public static final int VM_RAM = 131072; // 128GB
+    public static final int VM_BANDWIDTH = 10000; // 1 Gb
     public static final int VM_SIZE = 4000; // 4 GB
 
-    public static final double FUNCTION_STARTUP_TIME = 0.3;
-    public static final double FUNCTION_IDLE_TIME = 7;
-    public static final double FUNCTION_EXECUTION_TIME = 0.1;
+    public static final double FUNCTION_STARTUP_TIME = 0.5;
+    public static final double FUNCTION_IDLE_TIME = 1680; // 28m
+    public static final double FUNCTION_EXECUTION_TIME = 3;
+
+    public static final int NUMBER_OF_USERS = 200;
 
     private static final CloudSimPlus simulation = new CloudSimPlus();
     private static final GlobalDatacenterBroker broker = new GlobalDatacenterBroker(simulation);
     private static final CountryCostMapping countryCostMapping = new CountryCostMapping();
 
-    private static final List<Application> applications = List.of(
-            new Application(List.of(
-                    Country.Germany
-            ), "Application1")
+    private static final Application application = new Application(
+            List.of(Country.Ukraine, Country.USA, Country.Australia), "Application"
     );
-    private static final List<User> users = applications.stream()
-            .flatMap(application -> UserHandler.createUsers(application).stream()).toList();
+
+    private static final List<User> users = UserHandler.createUsers(application);
 
     public static void main(String[] args) throws FileNotFoundException {
         DatacenterUtils.createDatacenter(Country.Germany);
@@ -73,8 +73,7 @@ public class Simulation {
     }
 
     public static void clockTickHandler(EventInfo info) {
-        for (var application : applications)
-            application.process(info);
+        application.process(info);
 
         for (var user : users)
             user.process(info);
