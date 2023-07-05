@@ -22,7 +22,7 @@ public class Application {
         var broker = Simulation.getBroker();
 
         var vms = this.countriesWithFunction.stream()
-                .map(country -> new GlobalVm(10000, 2, country)
+                .map(country -> new GlobalVm(Simulation.VM_MIPS_CAPACITY, Simulation.VM_CORES, country)
                         .setRam(Simulation.VM_RAM)
                         .setBw(Simulation.VM_BANDWIDTH)
                         .setSize(Simulation.VM_SIZE)
@@ -68,7 +68,7 @@ public class Application {
 
     public FunctionCloudlet createFunction(Country country, double startupTime) {
         final long length = -1;
-        final long fileSize = 50000000; // 50 MB
+        final long fileSize = Simulation.FUNCTION_SIZE;
 
         return (FunctionCloudlet) new FunctionCloudlet(length, 1, country, this, startupTime)
                 .setFileSize(fileSize)

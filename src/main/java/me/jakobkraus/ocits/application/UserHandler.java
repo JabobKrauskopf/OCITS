@@ -28,14 +28,15 @@ public class UserHandler {
                 default -> Country.Germany;
             };
 
-            // Set start time randomly (between 0 and 39999)
-            var startTime = new Random().nextInt(40000);
+            var startTime = new Random().nextInt(Simulation.SIMULATION_LENGTH);
 
-            // Set period randomly (between 1.0 and 10.0)
-            var period = new Random().nextFloat(10) + 1;
+            var period = new Random().nextFloat(
+                Simulation.MAXIMUM_USER_PERIOD - Simulation.MINIMUM_USER_PERIOD + 1
+            ) + Simulation.MINIMUM_USER_PERIOD;
 
-            // Set max requests randomly (between 25 and 1000)
-            var maxRequests = new Random().nextInt(976) + 25;
+            var maxRequests = new Random().nextInt(
+                Simulation.MAXIMUM_USER_MAX_REQUESTS - Simulation.MINIMUM_USER_MAX_REQUESTS + 1
+            ) + Simulation.MINIMUM_USER_MAX_REQUESTS;
 
             userList.add(new User(userId++, country, startTime, period, maxRequests, application));
         }

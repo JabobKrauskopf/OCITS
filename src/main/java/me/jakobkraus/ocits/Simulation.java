@@ -24,6 +24,7 @@ import java.util.List;
 
 public class Simulation {
     public static final int SIMULATION_LENGTH = 43200; // Simulate 24h
+
     public static final int HOSTS_PER_DATACENTER = 5;
     public static final int HOST_MIPS = 10000;
     public static final int HOST_RAM = 131072; // 128GB
@@ -34,27 +35,37 @@ public class Simulation {
     public static final int VM_RAM = 131072; // 128GB
     public static final int VM_BANDWIDTH = 10000; // 1 Gb
     public static final int VM_SIZE = 4000; // 4 GB
+    public static final long VM_MIPS_CAPACITY = 10000;
+    public static final int VM_CORES = 2;
 
     public static final double FUNCTION_STARTUP_TIME = 0.5;
     public static final double FUNCTION_IDLE_TIME = 1680; // 28m
     public static final double FUNCTION_EXECUTION_TIME = 3;
+    public static final long FUNCTION_SIZE = 50000000; // 50 MB
 
     public static final int NUMBER_OF_USERS = 200;
+    public static final int MINIMUM_USER_PERIOD = 1;
+    public static final int MAXIMUM_USER_PERIOD = 10;
+    public static final int MINIMUM_USER_MAX_REQUESTS = 25;
+    public static final int MAXIMUM_USER_MAX_REQUESTS = 1000;
+
+    public static final List<Country> COUNTRIES_WITH_DATACENTER = List.of(
+        Country.Germany, Country.USA, Country.China
+    );
+    public static final List<Country> COUNTRIES_WITH_FUNCTION = List.of(
+        Country.Ukraine, Country.USA, Country.Australia
+    );
 
     private static final CloudSimPlus simulation = new CloudSimPlus();
     private static final GlobalDatacenterBroker broker = new GlobalDatacenterBroker(simulation);
     private static final CountryCostMapping countryCostMapping = new CountryCostMapping();
 
-    private static final Application application = new Application(
-            List.of(Country.Ukraine, Country.USA, Country.Australia), "Application"
-    );
+    private static final Application application = new Application(COUNTRIES_WITH_FUNCTION, "Application");
 
     private static final List<User> users = UserHandler.createUsers(application);
 
     public static void main(String[] args) throws FileNotFoundException {
-        DatacenterUtils.createDatacenter(Country.Germany);
-        DatacenterUtils.createDatacenter(Country.USA);
-        DatacenterUtils.createDatacenter(Country.China);
+        COUNTRIES_WITH_DATACENTER.forEach(DatacenterUtils::createDatacenter);
 
         simulation.addOnClockTickListener(Simulation::clockTickHandler);
 
