@@ -32,8 +32,7 @@ public class Application {
     }
 
     public void process(EventInfo info) {
-        for (int i = 0; i < this.functionCloudlets.size(); i++)
-            this.functionCloudlets.get(i).process(info);
+        for (FunctionCloudlet functionCloudlet : this.functionCloudlets) functionCloudlet.process(info);
     }
 
     public void request(EventInfo info, User user) {

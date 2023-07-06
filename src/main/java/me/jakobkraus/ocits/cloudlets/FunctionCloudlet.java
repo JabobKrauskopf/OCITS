@@ -98,7 +98,6 @@ public class FunctionCloudlet extends ApplicationCloudlet {
         this.setLength(this.getFinishedLengthSoFar());
         this.setFinishTime(info.getTime());
         this.setFunctionStatus(FunctionStatus.Finished, info);
-        this.application.removeFunctionCloudlet(this);
     }
 
     public void setFunctionStatus(FunctionStatus functionStatus, EventInfo info) {
