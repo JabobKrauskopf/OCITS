@@ -3,6 +3,7 @@ package me.jakobkraus.ocits.cloudlets;
 import me.jakobkraus.ocits.Simulation;
 import me.jakobkraus.ocits.application.Application;
 import me.jakobkraus.ocits.application.User;
+import me.jakobkraus.ocits.datacenter.GlobalDatacenter;
 import me.jakobkraus.ocits.global.Country;
 import me.jakobkraus.ocits.logging.FunctionPayload;
 import me.jakobkraus.ocits.logging.ResultLogger;
@@ -73,7 +74,9 @@ public class FunctionCloudlet extends ApplicationCloudlet {
     }
 
     public void processRequested(EventInfo info) {
-        var requestCost = Simulation.getCountryCostMapping().getCost(this.respondTo.getCountry(), this.country);
+        var requestCost = Simulation.getCountryCostMapping().getCost(
+            this.respondTo.getCountry(), ((GlobalDatacenter) this.getVm().getHost().getDatacenter()).getCountry()
+        );
         if (info.getTime() - this.requestedSince < requestCost)
             return;
 
@@ -82,7 +85,9 @@ public class FunctionCloudlet extends ApplicationCloudlet {
     }
 
     public void processResponding(EventInfo info) {
-        var responseCost = Simulation.getCountryCostMapping().getCost(this.respondTo.getCountry(), this.country);
+        var responseCost = Simulation.getCountryCostMapping().getCost(
+            this.respondTo.getCountry(), ((GlobalDatacenter) this.getVm().getHost().getDatacenter()).getCountry()
+        );
         if (info.getTime() - this.respondingSince < responseCost)
             return;
 
