@@ -15,7 +15,7 @@ import java.util.stream.IntStream;
 public class DatacenterUtils {
     public static GlobalDatacenter createDatacenter(Country country) {
         var hosts = IntStream.range(0, Simulation.HOSTS_PER_DATACENTER)
-                .mapToObj(i -> DatacenterUtils.createHost()).toList();
+            .mapToObj(i -> DatacenterUtils.createHost()).toList();
 
         return new GlobalDatacenter(Simulation.getSimulation(), country, hosts);
     }
@@ -26,8 +26,8 @@ public class DatacenterUtils {
             peList.add(new PeSimple(Simulation.HOST_MIPS));
 
         return new HostSimple(Simulation.HOST_RAM, Simulation.HOST_BW, Simulation.HOST_STORAGE, peList)
-                .setRamProvisioner(new ResourceProvisionerSimple())
-                .setBwProvisioner(new ResourceProvisionerSimple())
-                .setVmScheduler(new VmSchedulerTimeShared());
+            .setRamProvisioner(new ResourceProvisionerSimple())
+            .setBwProvisioner(new ResourceProvisionerSimple())
+            .setVmScheduler(new VmSchedulerTimeShared());
     }
 }

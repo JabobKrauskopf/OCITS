@@ -24,6 +24,9 @@ Install the project dependencies using `mvn install`.
 Run the `main` method in the [Simulation](./src/main/java/me/jakobkraus/ocits/Simulation.java) class.
 This will run the simulation using the static parameters in the class.
 
+Results will be logged in the root directory in the `userLogs.csv` and `functionLogs.csv`.
+These files contain the state changes at a specific time for users and functions.
+
 ## Configuration
 
 The static parameters in the [Simulation](./src/main/java/me/jakobkraus/ocits/Simulation.java) class can be configured
@@ -60,6 +63,8 @@ Description of static parameters:
 
 
 - `NUMBER_OF_USERS`: the number of users to simulate
+- `USER_START_TIME_MEAN`: the mean of the standard distribution defining the user start time
+- `USER_START_TIME_STANDARD_DEVIATION`: the deviation of the standard distribution defining the user start time
 - `MINIMUM_USER_PERIOD`: the minimum period between requests for a user in seconds
 - `MAXIMUM_USER_PERIOD`: the maximum period between requests for a user in seconds
 - `MINIMUM_USER_MAX_REQUESTS`: the minimum number for the maximum amount of requests a user can send
@@ -72,7 +77,7 @@ Description of static parameters:
 ## Notes
 
 CloudSim Plus has features for networking. These features however are currently not suitable for use in
-a production simulation. Some examples for issues for this can be found in the following GitHub issues:
+a production simulation. Some examples for issues on this can be found in the following GitHub issues:
 - https://github.com/cloudsimplus/cloudsimplus/issues/455
 - https://github.com/cloudsimplus/cloudsimplus/issues/456
 - https://github.com/cloudsimplus/cloudsimplus/issues/457

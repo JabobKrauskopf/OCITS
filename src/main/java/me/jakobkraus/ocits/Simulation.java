@@ -4,7 +4,6 @@ import me.jakobkraus.ocits.application.Application;
 import me.jakobkraus.ocits.application.User;
 import me.jakobkraus.ocits.application.UserHandler;
 import me.jakobkraus.ocits.cloudlets.ApplicationCloudlet;
-import me.jakobkraus.ocits.cloudlets.GlobalCloudlet;
 import me.jakobkraus.ocits.datacenter.DatacenterUtils;
 import me.jakobkraus.ocits.datacenter.GlobalDatacenter;
 import me.jakobkraus.ocits.datacenter.GlobalDatacenterBroker;
@@ -23,7 +22,7 @@ import java.io.FileNotFoundException;
 import java.util.List;
 
 public class Simulation {
-    public static final int SIMULATION_LENGTH = 43200; // Simulate 24h
+    public static final int SIMULATION_LENGTH = 43200; // Simulate 12h
 
     public static final int HOSTS_PER_DATACENTER = 5;
     public static final int HOST_MIPS = 10000;
@@ -44,6 +43,8 @@ public class Simulation {
     public static final long FUNCTION_SIZE = 50000000; // 50 MB
 
     public static final int NUMBER_OF_USERS = 200;
+    public static final int USER_START_TIME_MEAN = Simulation.SIMULATION_LENGTH / 2;
+    public static final int USER_START_TIME_STANDARD_DEVIATION = Simulation.SIMULATION_LENGTH / 6;
     public static final int MINIMUM_USER_PERIOD = 1;
     public static final int MAXIMUM_USER_PERIOD = 10;
     public static final int MINIMUM_USER_MAX_REQUESTS = 25;
@@ -73,11 +74,10 @@ public class Simulation {
         simulation.start();
 
         new CloudletsTableBuilder(broker.getCloudletFinishedList())
-                .addColumn(new TextTableColumn("   DC   ", " Country "), Simulation::getDatacenterCountry)
-                .addColumn(new TextTableColumn("VM Expected", "  Country  "), Simulation::getVmCountry)
-                .addColumn(new TextTableColumn("Cloudlet Expected", "     Country     "), Simulation::getCloudletCountry)
-                .addColumn(new TextTableColumn("Application", "  Country  "), Simulation::getCloudletApplication)
-                .build();
+            .addColumn(new TextTableColumn("   DC   ", " Country"), Simulation::getDatacenterCountry)
+            .addColumn(new TextTableColumn("VM Expected", "  Country  "), Simulation::getVmCountry)
+            .addColumn(new TextTableColumn("Application", "  Country  "), Simulation::getCloudletApplication)
+            .build();
 
         ResultLogger.saveUserLogsToCsv("./userLogs.csv");
         ResultLogger.saveFunctionLogsToCsv("./functionLogs.csv");
@@ -102,12 +102,6 @@ public class Simulation {
         if (!(vm instanceof GlobalVm))
             return "N/A";
         return ((GlobalVm) vm).getCountry().toString();
-    }
-
-    public static String getCloudletCountry(final Cloudlet cloudlet) {
-        if (!(cloudlet instanceof GlobalCloudlet))
-            return "N/A";
-        return ((GlobalCloudlet) cloudlet).getCountry().toString();
     }
 
     public static String getCloudletApplication(final Cloudlet cloudlet) {

@@ -30,15 +30,15 @@ public class GlobalDatacenterBroker extends DatacenterBrokerSimple {
         }
 
         var globalDatacenterList = dataCenterList.stream()
-                .map(datacenter -> (GlobalDatacenter) datacenter).toList();
+            .map(datacenter -> (GlobalDatacenter) datacenter).toList();
         var datacenterCountries = globalDatacenterList.stream()
-                .map(GlobalDatacenter::getCountry).toList();
+            .map(GlobalDatacenter::getCountry).toList();
 
         var closestCountry = Simulation.getCountryCostMapping()
-                .getClosestCountry(globalVm.getCountry(), datacenterCountries);
+            .getClosestCountry(globalVm.getCountry(), datacenterCountries);
 
         return globalDatacenterList.stream().filter(datacenter -> datacenter.getCountry() == closestCountry)
-                .findFirst().orElse(null);
+            .findFirst().orElse(null);
     }
 
     @Override
@@ -52,21 +52,21 @@ public class GlobalDatacenterBroker extends DatacenterBrokerSimple {
         }
 
         var vmList = getVmExecList().stream()
-                .filter(vm -> vm.getHost().getDatacenter() instanceof GlobalDatacenter)
-                .toList();
+            .filter(vm -> vm.getHost().getDatacenter() instanceof GlobalDatacenter)
+            .toList();
 
         if (vmList.isEmpty()) {
             return Vm.NULL;
         }
 
         var datacenterCountries = vmList.stream()
-                .map(vm -> ((GlobalDatacenter) vm.getHost().getDatacenter()).getCountry()).toList();
+            .map(vm -> ((GlobalDatacenter) vm.getHost().getDatacenter()).getCountry()).toList();
 
         var closestCountry = Simulation.getCountryCostMapping()
-                .getClosestCountry(globalCloudlet.getCountry(), datacenterCountries);
+            .getClosestCountry(globalCloudlet.getCountry(), datacenterCountries);
 
         return vmList.stream()
-                .filter(vm -> ((GlobalDatacenter) vm.getHost().getDatacenter()).getCountry() == closestCountry)
-                .findFirst().orElse(Vm.NULL);
+            .filter(vm -> ((GlobalDatacenter) vm.getHost().getDatacenter()).getCountry() == closestCountry)
+            .findFirst().orElse(Vm.NULL);
     }
 }

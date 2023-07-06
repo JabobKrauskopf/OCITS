@@ -17,24 +17,24 @@ public class FunctionPayload {
 
     public static String getCsvHeader() {
         return String.join(",",
-                "cloudletId",
-                "application",
-                "expectedCountry",
-                "actualCountry",
-                "status",
-                "time"
+            "cloudletId",
+            "application",
+            "expectedCountry",
+            "actualCountry",
+            "status",
+            "time"
         );
     }
 
     @Override
     public String toString() {
         return String.join(",",
-                String.valueOf(cloudlet.getId()),
-                cloudlet.getApplication().getApplicationName(),
-                cloudlet.getCountry().toString(),
-                ((GlobalDatacenter) cloudlet.getVm().getHost().getDatacenter()).getCountry().toString(),
-                status.toString(),
-                String.valueOf(time)
+            String.valueOf(cloudlet.getId()),
+            cloudlet.getApplication().getApplicationName(),
+            cloudlet.getCountry().toString(),
+            ((GlobalDatacenter) cloudlet.getVm().getHost().getDatacenter()).getCountry().toString(),
+            status.toString(),
+            String.valueOf(time)
         );
     }
 }

@@ -27,16 +27,19 @@ public class FunctionCloudlet extends ApplicationCloudlet {
     public FunctionCloudlet(long length, int pesNumber, Country country, Application application, double startTime) {
         super(length, pesNumber, country, application);
         this.startTime = startTime;
+        ResultLogger.log(new FunctionPayload(this, FunctionStatus.Starting, startTime));
     }
 
     public FunctionCloudlet(long length, long pesNumber, Country country, Application application, double startTime) {
         super(length, pesNumber, country, application);
         this.startTime = startTime;
+        ResultLogger.log(new FunctionPayload(this, FunctionStatus.Starting, startTime));
     }
 
     public FunctionCloudlet(long id, long length, long pesNumber, Country country, Application application, double startTime) {
         super(id, length, pesNumber, country, application);
         this.startTime = startTime;
+        ResultLogger.log(new FunctionPayload(this, FunctionStatus.Starting, startTime));
     }
 
     public void setRespondTo(User respondTo) {

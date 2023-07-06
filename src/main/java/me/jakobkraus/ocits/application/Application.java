@@ -22,11 +22,11 @@ public class Application {
         var broker = Simulation.getBroker();
 
         var vms = this.countriesWithFunction.stream()
-                .map(country -> new GlobalVm(Simulation.VM_MIPS_CAPACITY, Simulation.VM_CORES, country)
-                        .setRam(Simulation.VM_RAM)
-                        .setBw(Simulation.VM_BANDWIDTH)
-                        .setSize(Simulation.VM_SIZE)
-                ).toList();
+            .map(country -> new GlobalVm(Simulation.VM_MIPS_CAPACITY, Simulation.VM_CORES, country)
+                .setRam(Simulation.VM_RAM)
+                .setBw(Simulation.VM_BANDWIDTH)
+                .setSize(Simulation.VM_SIZE)
+            ).toList();
 
         broker.submitVmList(vms);
     }
@@ -38,11 +38,11 @@ public class Application {
 
     public void request(EventInfo info, User user) {
         var closestAvailableCountry = Simulation.getCountryCostMapping()
-                .getClosestCountry(user.getCountry(), this.countriesWithFunction);
+            .getClosestCountry(user.getCountry(), this.countriesWithFunction);
 
         var availableCloudlets = this.functionCloudlets.stream()
-                .filter(cloudlet -> cloudlet.getCountry() == closestAvailableCountry)
-                .filter(cloudlet -> cloudlet.getFunctionStatus() == FunctionStatus.Idling).toList();
+            .filter(cloudlet -> cloudlet.getCountry() == closestAvailableCountry)
+            .filter(cloudlet -> cloudlet.getFunctionStatus() == FunctionStatus.Idling).toList();
 
         if (!availableCloudlets.isEmpty()) {
             var cloudlet = availableCloudlets.get(0);
@@ -71,8 +71,8 @@ public class Application {
         final long fileSize = Simulation.FUNCTION_SIZE;
 
         return (FunctionCloudlet) new FunctionCloudlet(length, 1, country, this, startupTime)
-                .setFileSize(fileSize)
-                .setOutputSize(fileSize);
+            .setFileSize(fileSize)
+            .setOutputSize(fileSize);
     }
 
     public String getApplicationName() {

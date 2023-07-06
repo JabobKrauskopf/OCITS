@@ -70,7 +70,7 @@ public class CountryCostMapping {
 
     public Country getClosestCountry(Country to, List<Country> comparison) {
         return comparison.stream().reduce(Country.Germany,
-                (smallest, element) -> this.getCost(smallest, to) > this.getCost(element, to) ? element : smallest
+            (smallest, element) -> this.getCost(smallest, to) > this.getCost(element, to) ? element : smallest
         );
     }
 }

@@ -17,7 +17,7 @@ public class User {
     private double lastRequest;
     private int currentRequestCount;
 
-    public User(long id, Country country, int startTime, double period, int maxRequestCount, Application application) {
+    public User(long id, Country country, long startTime, double period, int maxRequestCount, Application application) {
         this.id = id;
         this.country = country;
         this.startTime = startTime;

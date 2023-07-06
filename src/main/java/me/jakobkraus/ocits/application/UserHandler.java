@@ -14,21 +14,21 @@ public class UserHandler {
         var userList = new ArrayList<User>();
 
         for (int i = 0; i < Simulation.NUMBER_OF_USERS; i++) {
-            var countryIndex = new Random().nextInt(9);
+            var countries = Country.values();
+            var countryIndex = new Random().nextInt(countries.length);
+            var country = countries[countryIndex];
 
-            var country = switch (countryIndex) {
-                case 1 -> Country.USA;
-                case 2 -> Country.China;
-                case 3 -> Country.Australia;
-                case 4 -> Country.Ukraine;
-                case 5 -> Country.SouthAfrica;
-                case 6 -> Country.Canada;
-                case 7 -> Country.Mexico;
-                case 8 -> Country.Brazil;
-                default -> Country.Germany;
-            };
+            var randomTime = new Random()
+                .nextGaussian() * (Simulation.USER_START_TIME_STANDARD_DEVIATION) + (Simulation.USER_START_TIME_MEAN);
 
-            var startTime = new Random().nextInt(Simulation.SIMULATION_LENGTH);
+            long startTime;
+
+            if (randomTime < 0)
+                startTime = 0;
+            else if (randomTime > Simulation.SIMULATION_LENGTH)
+                startTime = Simulation.SIMULATION_LENGTH;
+            else
+                startTime = (long) randomTime;
 
             var period = new Random().nextFloat(
                 Simulation.MAXIMUM_USER_PERIOD - Simulation.MINIMUM_USER_PERIOD + 1
