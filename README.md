@@ -71,6 +71,9 @@ Description of static parameters:
 - `MAXIMUM_USER_MAX_REQUESTS`: the maximum number for the maximum amount of requests a user can send
 
 
+- `RANDOM_GENERATOR_SEED`: the seed for the random user generator
+
+
 - `COUNTRIES_WITH_DATACENTER`: the countries with a datacenter
 - `COUNTRIES_WITH_FUNCTION`: the countries where the application would like to deploy functions to. Does not have to overlap with `COUNTRIES_WITH_DATACENTER`
 

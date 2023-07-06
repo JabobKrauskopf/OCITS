@@ -12,13 +12,14 @@ public class UserHandler {
 
     public static List<User> createUsers(Application application) {
         var userList = new ArrayList<User>();
+        var randomGenerator = new Random(Simulation.RANDOM_GENERATOR_SEED);
 
         for (int i = 0; i < Simulation.NUMBER_OF_USERS; i++) {
             var countries = Country.values();
-            var countryIndex = new Random().nextInt(countries.length);
+            var countryIndex = randomGenerator.nextInt(countries.length);
             var country = countries[countryIndex];
 
-            var randomTime = new Random()
+            var randomTime = randomGenerator
                 .nextGaussian() * (Simulation.USER_START_TIME_STANDARD_DEVIATION) + (Simulation.USER_START_TIME_MEAN);
 
             long startTime;
@@ -30,11 +31,11 @@ public class UserHandler {
             else
                 startTime = (long) randomTime;
 
-            var period = new Random().nextFloat(
+            var period = randomGenerator.nextFloat(
                 Simulation.MAXIMUM_USER_PERIOD - Simulation.MINIMUM_USER_PERIOD + 1
             ) + Simulation.MINIMUM_USER_PERIOD;
 
-            var maxRequests = new Random().nextInt(
+            var maxRequests = randomGenerator.nextInt(
                 Simulation.MAXIMUM_USER_MAX_REQUESTS - Simulation.MINIMUM_USER_MAX_REQUESTS + 1
             ) + Simulation.MINIMUM_USER_MAX_REQUESTS;
 
