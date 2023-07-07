@@ -38,7 +38,7 @@ public class Simulation {
     public static final int VM_CORES = 2;
 
     public static final double FUNCTION_STARTUP_TIME = 0.5;
-    public static final double FUNCTION_IDLE_TIME = 600; // 10m
+    public static final double FUNCTION_IDLE_TIME = 1680; // 28m
     public static final double FUNCTION_EXECUTION_TIME = 3;
     public static final long FUNCTION_SIZE = 50000000; // 50 MB
 
